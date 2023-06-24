@@ -1,8 +1,8 @@
 package servlet;
 
+import config.Config;
 import controller.PostController;
-import repository.PostRepository;
-import service.PostService;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -11,15 +11,14 @@ import javax.servlet.http.HttpServletResponse;
 public class MainServlet extends HttpServlet {
     private PostController controller;
 
-private final static String METHOD_GET = "GET";
+    private final static String METHOD_GET = "GET";
     private final static String METHOD_POST = "POST";
     private final static String METHOD_DELETE = "DELETE";
 
     @Override
     public void init() {
-        final var repository = new PostRepository();
-        final var service = new PostService(repository);
-        controller = new PostController(service);
+        final var context = new AnnotationConfigApplicationContext(Config.class);
+        controller = context.getBean(PostController.class);
     }
 
     @Override
@@ -45,7 +44,7 @@ private final static String METHOD_GET = "GET";
             }
             if (method.equals(METHOD_DELETE) && path.matches("/api/posts/\\d+")) {
                 // easy way
-              Long id = getId(path);
+                Long id = getId(path);
                 controller.removeById(id, resp);
                 return;
             }
@@ -59,7 +58,7 @@ private final static String METHOD_GET = "GET";
     }
 
 
-    private Long getId(String path){
+    private Long getId(String path) {
         return Long.parseLong(path.substring(path.lastIndexOf("/")));
     }
 }
