@@ -53,8 +53,6 @@ public class MainServlet extends HttpServlet {
             e.printStackTrace();
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-
-
     }
 
 
